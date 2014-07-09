@@ -18,9 +18,10 @@ gem 'rspec'
 
 gem 'newrelic_rpm'
 
+gem 'thin'
+
 group :development, :test do
   gem 'rspec-rails'
-  gem 'thin'
 end
 
 gem 'capistrano', group: :development
