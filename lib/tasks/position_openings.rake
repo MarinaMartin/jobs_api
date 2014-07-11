@@ -8,6 +8,19 @@ namespace :jobs do
       importer.import
     end
   end
+  
+  desc 'Import NLX data feeds'
+  task :import_nlx_data_feed, [:url, :source, :organization_id, :organization_name] => :environment do |t, args|
+    if args.url.nil? || args.source.nil? || args.organization_id.nil? || args.organization_name.nil?
+      puts 'usage: rake jobs:import_nlx_data_feed[url, source, organization_id, organization_name]'
+    else
+      response = HTTParty.get(args.url)
+      if response.code == 200
+        importer = NlxData.new(response.body, args.source, args.organization_id, args.organization_name)
+        importer.import
+      end
+    end
+  end
 
   desc 'Import Neogov YAML file containing agency info'
   task :import_neogov_rss, [:yaml_filename] => :environment do |t, args|
