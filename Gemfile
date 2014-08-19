@@ -21,6 +21,9 @@ gem 'newrelic_rpm'
 
 gem 'thin'
 
+gem 'net-ssh'
+gem 'net-sftp'
+
 group :development, :test do
   gem 'rspec-rails'
 end

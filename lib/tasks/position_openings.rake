@@ -1,4 +1,27 @@
+require 'net/ssh/proxy/http'
+
 namespace :jobs do
+  desc 'Download and import USAJobs XML file'
+  task download_and_import_usajobs_xml: :environment do
+    uri = URI(ENV['QUOTAGUARDSTATIC_URL'])
+    proxy = Net::SSH::Proxy::HTTP.new(uri.host, uri.port, :user => uri.user, :password => uri.password)
+    data = []
+    Net::SFTP.start(ENV['OPM_HOST'], ENV['OPM_USER'], :password => ENV['OPM_PASSWORD'], :proxy => proxy) do |sftp|
+      sftp.dir.foreach("Prod") do |entry|
+        if entry.name.ends_with?(".xml")
+          puts "Downloading: #{entry.name}"
+          data << sftp.download!("Prod/#{entry.name}")
+        end
+      end
+    end
+    data.each_with_index do |data_import, index|
+      tempfile = Tempfile.new("import_#{index}")
+      tempfile.write(data_import)
+      tempfile.rewind
+      UsajobsData.new(tempfile.path).import
+    end
+  end
+  
   desc 'Import USAJobs XML file'
   task :import_usajobs_xml, [:filename] => :environment do |t, args|
     if args.filename.nil?

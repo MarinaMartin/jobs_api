@@ -191,6 +191,8 @@ DEPENDENCIES
   httparty
   jbuilder
   net-http-persistent
+  net-sftp
+  net-ssh
   newrelic_rpm
   nokogiri
   oj
