@@ -185,6 +185,8 @@ DEPENDENCIES
   faraday_middleware
   jbuilder
   net-http-persistent
+  net-sftp
+  net-ssh
   newrelic_rpm
   nokogiri
   oj
