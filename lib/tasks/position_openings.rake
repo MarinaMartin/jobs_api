@@ -74,6 +74,19 @@ namespace :jobs do
       puts "\torganization_id: US-OH"
     end
   end
+  
+  desc 'Import Schema.org urls from Employment Center'
+  task :import_employment_center_schema_dot_org_urls => :environment do
+    response = HTTParty.get(ENV['EMPLOYMENT_CENTER_API_BASE_URL'] + "/api/employers")
+    if response.code == 200
+      parsed_response = JSON.parse(response.body)
+      schema_dot_org_data = SchemaDotOrgData.new
+      parsed_response.each do |employer|
+        employer_response = HTTParty.get(employer['url'])
+        schema_dot_org_data.import(employer_response.body, employer['company_name'] || "Schema.org") if employer_response.code == 200
+      end
+    end
+  end
 
   desc 'Recreate position openings index'
   task recreate_index: :environment do
