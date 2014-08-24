@@ -15,18 +15,11 @@ gem 'jbuilder'
 gem 'us_states', :git => 'git://github.com/GSA/us_states.git'
 gem 'rspec'
 gem 'newrelic_rpm'
-
-gem 'thin'
-
+gem 'unicorn'
+gem 'coveralls', require: false
 gem 'net-ssh'
 gem 'net-sftp'
-
-group :development, :test do
-  gem 'rspec-rails'
-end
-
 gem 'mida'
-gem 'coveralls', require: false
 
 group :development do
   gem 'capistrano'
@@ -40,4 +33,5 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'thin'
 end
