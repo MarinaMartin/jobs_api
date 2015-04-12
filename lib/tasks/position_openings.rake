@@ -83,7 +83,13 @@ namespace :jobs do
       schema_dot_org_data = SchemaDotOrgData.new
       parsed_response.each do |employer|
         employer_response = HTTParty.get(employer['url'])
-        schema_dot_org_data.import(employer_response.body, employer['company_name'] || "Schema.org") if employer_response.code == 200
+        if employer_response.code == 200
+          if /.html\z/ =~ employer['url'] 
+            schema_dot_org_data.import(employer_response.body, employer['company_name'] || "Schema.org") 
+            elseif /.json\z/ =~ employer['url']
+            importer = SchemaDotOrgJsonData.new(employer_response.body, employer['company_name'] || "Schema.org")
+            importer.import
+          end
       end
     end
   end
