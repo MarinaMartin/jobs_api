@@ -90,6 +90,7 @@ namespace :jobs do
             importer = SchemaDotOrgJsonData.new(employer_response.body, employer['company_name'] || "Schema.org")
             importer.import
           end
+        end
       end
     end
   end
