@@ -99,12 +99,7 @@ namespace :jobs do
   desc 'Download and import LocalJobNetwork Schema.org file'
   # One off task for localjobnetwork. 
   task download_and_import_localjobsnetwork_schema_dot_org_file: :environment do
-
-    #These environment variables must be configured on Heroku and removed from here
-    ENV['LOCALJOBNETWORK_HOST'] = '207.67.127.206'
-    ENV['LOCALJOBNETWORK_USER'] = 'h2hjobs'
-    ENV['LOCALJOBNETWORK_PASSWORD'] = 'jeep-2vjgW7'
-
+    data = ""
     Net::FTP.open(ENV['LOCALJOBNETWORK_HOST'], ENV['LOCALJOBNETWORK_USER'], ENV['LOCALJOBNETWORK_PASSWORD']) do |ftp|
       ftp.passive = true
       data = ftp.gettextfile('localjobnetwork_ebenefits.xml', nil )
