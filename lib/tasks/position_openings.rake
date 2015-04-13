@@ -1,4 +1,5 @@
 require 'net/ssh/proxy/http'
+require 'net/ftp'
 
 namespace :jobs do
   desc 'Download and import USAJobs XML file'
@@ -93,6 +94,27 @@ namespace :jobs do
         end
       end
     end
+  end
+
+  desc 'Download and import LocalJobNetwork Schema.org file'
+  # One off task for localjobnetwork. 
+  task download_and_import_localjobsnetwork_schema_dot_org_file: :environment do
+
+    #These environment variables must be configured on Heroku and removed from here
+    ENV['LOCALJOBNETWORK_HOST'] = '207.67.127.206'
+    ENV['LOCALJOBNETWORK_USER'] = 'h2hjobs'
+    ENV['LOCALJOBNETWORK_PASSWORD'] = 'jeep-2vjgW7'
+
+    Net::FTP.open(ENV['LOCALJOBNETWORK_HOST'], ENV['LOCALJOBNETWORK_USER'], ENV['LOCALJOBNETWORK_PASSWORD']) do |ftp|
+      ftp.passive = true
+      data = ftp.gettextfile('localjobnetwork_ebenefits.xml', nil )
+    end
+
+    #Hack until localjobnetwork converts their 'xml' file into HTML. All they need to do is place <html>, <head>, and <body> tags, and name the file using a .html extension.'
+    data = '<html><head></head><body>'+ data +'</body></html>'
+
+    schema_dot_org_data = SchemaDotOrgData.new
+    schema_dot_org_data.import(data, "LocalJobNetwork") 
   end
 
   desc 'Recreate position openings index'

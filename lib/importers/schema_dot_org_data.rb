@@ -43,9 +43,10 @@ class SchemaDotOrgData
   end
   
   def process_locations(job_posting)
-    job_locations = job_posting.properties['jobLocation']
-    if job_locations
-      return job_locations.collect do |job_location|
+    job_location = job_posting.properties['jobLocation']
+    if job_location.first.properties['address']
+      address = job_location.first.properties['address']
+      return address.collect do |job_location|
         city = job_location.properties['addressLocality'].first
         state = job_location.properties['addressRegion'].first
         {city: city, state: state}
@@ -56,7 +57,7 @@ class SchemaDotOrgData
   def process_organization(job_posting)
     hiring_organization = job_posting.properties['hiringOrganization']
     if hiring_organization
-      return hiring_organization.id if hiring_organization.id
+      return hiring_organization.first.properties['name'].first.gsub(' ','_')
     else
       return nil
     end
@@ -65,7 +66,7 @@ class SchemaDotOrgData
   def process_organization_name(job_posting)
     hiring_organization = job_posting.properties['hiringOrganization']
     if hiring_organization
-      return hiring_organization.properties['name'] if hiring_organization.properties['name']
+      return hiring_organization.first.properties['name'].first
     else
       return nil
     end
