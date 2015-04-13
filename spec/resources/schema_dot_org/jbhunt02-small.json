@@ -1,0 +1,36 @@
+[
+{
+  "@context": "http://schema.org",
+  "@type": "JobPosting",
+  "datePosted": "2015-04-10 10:54:42",
+  "employmentType": "Full Time",
+  "title": "Regional Truck Driver",
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "HARRISBURG",
+      "postalCode": "17111",
+      "addressRegion": "PA ",
+      "addressCountry": "USA"
+    }
+  },
+  "description": "\r\n\tIf you&#39;ve separated from the military in the past three years, or are planning to soon, Hunt&rsquo;s Heroes will get you in the driver&#39;s seat with no cost to you! Hunt&rsquo;s Heroes is our military training program that&rsquo;s designed specifically to help veterans transition into the civilian workforce.\r\n\r\n\t\r\n\t\tAttend a paid orientation and a Military Finisher Program\r\n\t\r\n\t\tUse funding from your GI Bill to pay for school\r\n\t\r\n\t\tGuaranteed driving job upon successful completion of orientation\r\n\r\n\r\n\tDrivers on this account will pick up and deliver containers to customers within four states. Drivers enjoy two days off each week and average annual earnings projected at $57,400.\r\n\t\r\n\tThis position offers benefits options for an individual or a family, including medical, dental, prescription, life insurance plans and more. Company drivers can also choose to enroll in a 401k with company-matched funds.\r\n\t\r\n\tCall 1-800-207-6097 today for program details and to reserve your spot in our military training program.\r\n\r\n\t*Proof of Heavy Equipment Operator clearance is required. Some drivers will complete a multi week driving instruction course. Others may only have to complete a 3 week Military Finisher Program training school after orientation.\r\n",
+  "baseSalary": "57400",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "legalName": "J.B. Hunt Transport",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "faxNumber": "479-820-5645",
+      "email": "greatdrivingjobs@jbhunt.com",
+      "contactType": "Hiring Manager",
+      "telephone": "800-723-0934"
+    }
+  },
+  "specialCommitments": "VeteranCommit",
+  "reqid": "4606-31789-2015-01-28",
+  "url": "http://www.jbhunt.com/jobs/driver/job_search/jobDescription.xhtml?jobId=4606-31789-2015-01-28",
+  "experienceRequirements": "0 Months Trucking Experience"
+}
+]

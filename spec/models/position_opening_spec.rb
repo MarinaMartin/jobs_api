@@ -339,25 +339,25 @@ describe PositionOpening do
   describe '.get_external_ids_by_source' do
     before do
       position_openings = []
-      position_openings << {source: 'usajobs', external_id: 1, type: 'position_opening', position_title: 'Deputy Special Assistant to the Chief Nurse Practitioner',
+      position_openings << {source: 'usajobs', external_id: "1", type: 'position_opening', position_title: 'Deputy Special Assistant to the Chief Nurse Practitioner',
                             organization_id: 'AF09', organization_name: 'Air Force Personnel Center', position_schedule_type_code: 1,
                             start_date: Date.current, end_date: Date.tomorrow, minimum: 80000, maximum: 100000, rate_interval_code: 'PA',
                             locations: [{city: 'Andrews AFB', state: 'MD'},
                                         {city: 'Pentagon Arlington', state: 'VA'},
                                         {city: 'Air Force Academy', state: 'CO'}]}
-      position_openings << {source: 'usajobs', external_id: 2, type: 'position_opening', position_title: 'Physician Assistant', position_schedule_type_code: 2,
+      position_openings << {source: 'usajobs', external_id: "2", type: 'position_opening', position_title: 'Physician Assistant', position_schedule_type_code: 2,
                             organization_id: 'VATA', organization_name: 'Veterans Affairs, Veterans Health Administration',
                             start_date: Date.current, end_date: Date.tomorrow, minimum: 17, maximum: 23, rate_interval_code: 'PH',
                             locations: [{city: 'Fulton', state: 'MD'}]}
-      position_openings << {source: 'usajobs', external_id: 3, type: 'position_opening', position_title: 'Future Person',
+      position_openings << {source: 'usajobs', external_id: "3", type: 'position_opening', position_title: 'Future Person',
                             organization_id: 'FUTU', organization_name: 'Future Administration', position_schedule_type_code: 2,
                             start_date: Date.current + 1, end_date: Date.current + 8, minimum: 17, maximum: 23, rate_interval_code: 'PH',
                             locations: [{city: 'San Francisco', state: 'CA'}]}
-      position_openings << {source: 'usajobs', external_id: 4, type: 'position_opening', position_title: 'Making No Money',
+      position_openings << {source: 'usajobs', external_id: "4", type: 'position_opening', position_title: 'Making No Money',
                             organization_id: 'FUTU', organization_name: 'Future Administration', position_schedule_type_code: 1,
                             start_date: Date.current, end_date: Date.current + 8, minimum: 0, maximum: 0, rate_interval_code: 'WC',
                             locations: [{city: 'San Francisco', state: 'CA'}]}
-      position_openings << {source: 'ng:michigan', external_id: 629140, type: 'position_opening', position_title: 'Supervisor (DOH #28425)',
+      position_openings << {source: 'ng:michigan', external_id: "629140", type: 'position_opening', position_title: 'Supervisor (DOH #28425)',
                             position_schedule_type_code: 1,
                             start_date: Date.current, end_date: Date.tomorrow, minimum: 20.7, maximum: 36.8, rate_interval_code: 'PH',
                             locations: [{city: 'Lansing', state: 'MI'}]}
@@ -365,8 +365,8 @@ describe PositionOpening do
     end
 
     it 'should return external_ids' do
-      PositionOpening.get_external_ids_by_source('usajobs').should == [1, 2, 3, 4]
-      PositionOpening.get_external_ids_by_source('ng:michigan').should == [629140]
+      PositionOpening.get_external_ids_by_source('usajobs').should == ["1", "2", "3", "4"]
+      PositionOpening.get_external_ids_by_source('ng:michigan').should == ["629140"]
       PositionOpening.get_external_ids_by_source('ng').should be_empty
     end
   end
