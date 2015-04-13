@@ -1,4 +1,5 @@
 require 'net/ssh/proxy/http'
+require 'net/ftp'
 
 namespace :jobs do
   desc 'Download and import USAJobs XML file'
@@ -97,6 +98,23 @@ namespace :jobs do
         end
       end
     end
+  end
+
+  desc 'Download and import LocalJobNetwork Schema.org file'
+  # One off task for localjobnetwork. 
+  task download_and_import_localjobsnetwork_schema_dot_org_file: :environment do
+    data = ""
+    Net::FTP.open(ENV['LOCALJOBNETWORK_HOST'], ENV['LOCALJOBNETWORK_USER'], ENV['LOCALJOBNETWORK_PASSWORD']) do |ftp|
+      ftp.passive = true
+      ##data = ftp.gettextfile('localjobnetwork_ebenefits.xml', nil )
+      data = ftp.gettextfile('small_localjobnetwork_ebenefits.xml', nil ) ## Small file for testing
+    end
+
+    #Hack until localjobnetwork converts their 'xml' file into HTML. All they need to do is place <html>, <head>, and <body> tags, and name the file using a .html extension.'
+    data = '<html><head></head><body>' + data + '</body></html>'
+
+    schema_dot_org_data = SchemaDotOrgData.new
+    schema_dot_org_data.import(data, "LocalJobNetwork") 
   end
 
   desc 'Recreate position openings index'

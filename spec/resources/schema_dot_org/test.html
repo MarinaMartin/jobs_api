@@ -2,14 +2,16 @@
 <head>
 </head>
 <body>
-<div itemscope itemtype="http://schema.org/JobPosting">
-      <meta itemprop="specialCommitments" content="VeteranCommit" />
-      <h2><span class="title" itemprop="title">Job Title</span></h2>
-      <p>Job description goes here.</p>
-      <span span itemprop="jobLocation" itemscope itemtype="http://schema.org/PostalAddress">
-        <p><strong>Location:</strong> ABC Company Headquarters, <span itemprop="addressLocality">Arlington</span>
-        <span itemprop="addressRegion">VA</span></p>
+  <div itemscope itemtype="http://schema.org/JobPosting">
+    <meta itemprop="specialCommitments" content="VeteranCommit" />
+    <h2><span class="title" itemprop="title">Job Title</span></h2>
+    <p><strong>Location:</strong> ABC Company Headquarters, 
+    <span itemprop="jobLocation" itemscope itemtype="http://schema.org/Place">
+      <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+        <span itemprop="addressLocality">Arlington</span> 
+        <span itemprop="addressRegion">VA</span>     
       </span>
-    </div>
+    </span>
+  </div>
 </body>
 </html>
