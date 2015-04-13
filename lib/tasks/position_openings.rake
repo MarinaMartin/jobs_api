@@ -104,14 +104,15 @@ namespace :jobs do
     ENV['LOCALJOBNETWORK_HOST'] = '207.67.127.206'
     ENV['LOCALJOBNETWORK_USER'] = 'h2hjobs'
     ENV['LOCALJOBNETWORK_PASSWORD'] = 'jeep-2vjgW7'
-
+    data = ""
     Net::FTP.open(ENV['LOCALJOBNETWORK_HOST'], ENV['LOCALJOBNETWORK_USER'], ENV['LOCALJOBNETWORK_PASSWORD']) do |ftp|
       ftp.passive = true
-      data = ftp.gettextfile('localjobnetwork_ebenefits.xml', nil )
+      ##data = ftp.gettextfile('localjobnetwork_ebenefits.xml', nil )
+      data = ftp.gettextfile('small_localjobnetwork_ebenefits.xml', nil ) ## Small file for testing
     end
 
     #Hack until localjobnetwork converts their 'xml' file into HTML. All they need to do is place <html>, <head>, and <body> tags, and name the file using a .html extension.'
-    data = '<html><head></head><body>'+ data +'</body></html>'
+    data = '<html><head></head><body>' + data + '</body></html>'
 
     schema_dot_org_data = SchemaDotOrgData.new
     schema_dot_org_data.import(data, "LocalJobNetwork") 
