@@ -27,7 +27,8 @@ class PositionOpening
                 type: {type: 'string'},
                 source: {type: 'string', index: :not_analyzed},
                 tags: {type: 'string', analyzer: 'keyword'},
-                external_id: {type: 'integer'},
+                external_id: {type: 'string', index: :not_analyzed},
+                url: {type: 'string', index: :not_analyzed},
                 position_title: {type: 'string', analyzer: 'custom_analyzer', term_vector: 'with_positions_offsets', store: true},
                 organization_id: {type: 'string', analyzer: 'keyword'},
                 organization_name: {type: 'string', index: :not_analyzed},
@@ -127,7 +128,7 @@ class PositionOpening
           start_date: item.start_date,
           end_date: item.end_date,
           locations: item.locations.collect { |location| "#{location.city}, #{location.state}" },
-          url: url_for_position_opening(item)
+          url: item.url || url_for_position_opening(item)
         }
       end
     end
@@ -170,7 +171,7 @@ class PositionOpening
           from from_index
           size MAX_RETURNED_DOCUMENTS
         end
-        external_ids.push(*search.results.map(&:external_id))
+        external_ids.push(*search.results.map{|result| result.external_id.first})
         from_index += search.results.count
         total = search.results.total
       end while external_ids.count < total
