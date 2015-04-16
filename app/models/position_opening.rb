@@ -6,6 +6,8 @@ class PositionOpening
   MAX_RETURNED_DOCUMENTS = 100
   SYNONYMS = ["information technology, it, tech, computer", "teacher, teaching", "certified nursing assistant, cna", "rn, registered nurse", "lpn, licensed practical nurse", "lvn, licensed vocational nurse", "pa, physician assistant", "custodial, janitor, custodian", "cys, child youth services", "clerk, clerical", "physician, doctor", "linguist, language", "tv, television", "legal, attorney", "counselor, counseling, therapy, therapist", "green, environment, environmental", "forester, forestry", "technical, technician", "technology, technologist", "electronic, electrical", "architect, architecture", "cypa, child and youth program assistant, childcare", "tso, transportation security officer"].freeze
 
+  SCHEMA_DOT_ORG_BLACKLIST = [ "c.r. england" ]
+
   class << self
 
     def create_search_index

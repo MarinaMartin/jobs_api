@@ -83,18 +83,20 @@ namespace :jobs do
       parsed_response = JSON.parse(response.body)
       schema_dot_org_data = SchemaDotOrgData.new
       parsed_response.each do |employer|
-        begin
-        employer_response = HTTParty.get(employer['url'], timeout: 5)
-        if employer_response.code == 200
-          if /html/ =~ employer_response.content_type 
-            schema_dot_org_data.import(employer_response.body, employer['company_name'] || "Schema.org") 
-            elsif /json/ =~ employer_response.content_type
-            importer = SchemaDotOrgJsonData.new(employer_response.body, employer['company_name'] || "Schema.org")
-            importer.import
+        if !(PositionOpening::SCHEMA_DOT_ORG_BLACKLIST.include? employer['company_name'].strip.downcase)
+          begin
+            employer_response = HTTParty.get(employer['url'], timeout: 5)
+            if employer_response.code == 200
+              if /html/ =~ employer_response.content_type 
+                schema_dot_org_data.import(employer_response.body, employer['company_name'] || "Schema.org") 
+              elsif /json/ =~ employer_response.content_type
+                importer = SchemaDotOrgJsonData.new(employer_response.body, employer['company_name'] || "Schema.org")
+                importer.import
+              end
+            end
+          rescue => e
+            Rails.logger.info "Rescued #{e.inspect} -- #{employer['url']}"
           end
-        end
-        rescue => e
-           Rails.logger.info "Rescued #{e.inspect} -- #{employer['url']}"
         end
       end
     end
