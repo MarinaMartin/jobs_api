@@ -78,9 +78,7 @@ namespace :jobs do
   
   desc 'Import Schema.org urls from Employment Center'
   task :import_employment_center_schema_dot_org_urls => :environment do
-    ##response = HTTParty.get(ENV['EMPLOYMENT_CENTER_API_BASE_URL'] + "/api/employers")
-    response = HTTParty.get("https://employmentportal.herokuapp.com" + "/api/employers")
-    puts "HERE"
+    response = HTTParty.get(ENV['EMPLOYMENT_CENTER_API_BASE_URL'] + "/api/employers")
     if response.code == 200
       parsed_response = JSON.parse(response.body)
       schema_dot_org_data = SchemaDotOrgData.new
