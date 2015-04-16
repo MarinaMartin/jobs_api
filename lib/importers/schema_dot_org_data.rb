@@ -24,7 +24,7 @@ class SchemaDotOrgData
       inactive = false
       days_remaining = 0 if days_remaining < 0 || start_date > end_date || inactive
       entry = {type: 'position_opening', source: source, tags: ["federal", source.downcase.gsub(/ /, "_")]}
-      entry[:external_id] = job_posting.id || job_posting.properties["url"]
+      entry[:external_id] = rand().to_s 
       entry[:locations] = process_locations(job_posting)
       if entry[:locations]
         entry[:locations] = [] if entry[:locations].size >= CATCHALL_THRESHOLD
