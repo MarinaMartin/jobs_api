@@ -22,7 +22,7 @@ class SchemaDotOrgJsonData
     inactive = false
     days_remaining = 0 if days_remaining < 0 || start_date > end_date || inactive
     entry = {type: 'position_opening', source: @source, tags: %w(private)}
-    entry[:external_id] = nil
+    entry[:external_id] = rand().to_s 
     entry[:locations] = process_locations(job)
     if entry[:locations]
       entry[:locations] = [] if entry[:locations].size >= CATCHALL_THRESHOLD
