@@ -71,6 +71,7 @@ class PositionOpening
             must { match :position_offering_type_code, query.position_offering_type_code } if query.position_offering_type_code.present?
             must { match :position_schedule_type_code, query.position_schedule_type_code } if query.position_schedule_type_code.present?
             should { match :position_title, query.keywords, analyzer: 'custom_analyzer' } if query.keywords.present?
+            should { match :source, query.keywords, analyzer: 'custom_analyzer' } if query.keywords.present?
             should do
               nested path: 'locations' do
                 query do
