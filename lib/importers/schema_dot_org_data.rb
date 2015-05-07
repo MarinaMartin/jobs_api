@@ -9,14 +9,14 @@ class SchemaDotOrgData
     position_openings = []
     doc.items.each do |item|
       if item.type == "http://schema.org/JobPosting"
-        position_openings << process_job_posting(item, source)
+        position_openings << process_job_posting(item, source) if has_minimum_required_props(item)
       end
     end
     PositionOpening.import position_openings.compact
   end
   
   def process_job_posting(job_posting, source)
-    if job_posting.properties
+    if job_posting.properties 
       published_at = DateTime.parse(job_posting.properties["datePosted"]) if job_posting.properties["datePosted"]
       start_date = published_at ? published_at.to_date : Date.current
       end_date = start_date + 30.days
@@ -24,7 +24,7 @@ class SchemaDotOrgData
       inactive = false
       days_remaining = 0 if days_remaining < 0 || start_date > end_date || inactive
       entry = {type: 'position_opening', source: source, tags: ["federal", source.downcase.gsub(/ /, "_")]}
-      entry[:external_id] = rand().to_s 
+      entry[:external_id] = job_posting.properties['url']
       entry[:locations] = process_locations(job_posting)
       if entry[:locations]
         entry[:locations] = [] if entry[:locations].size >= CATCHALL_THRESHOLD
@@ -71,4 +71,14 @@ class SchemaDotOrgData
       return nil
     end
   end    
+
+  def has_minimum_required_props(job_posting)
+    if job_posting.properties
+      required_properties = ['hiringOrganization','datePosted', 'url']
+      required_properties.map {|x| !job_posting.properties[x].blank?}.all?
+    else 
+      return false 
+    end
+  end
+
 end
