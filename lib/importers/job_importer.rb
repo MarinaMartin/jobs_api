@@ -27,4 +27,12 @@ module JobImporter
     end
     location_str
   end
+
+  def required_properties
+    return [
+      'hiringOrganization',
+      'datePosted', 
+      'url'
+    ]
+  end
 end

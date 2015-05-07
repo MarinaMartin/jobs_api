@@ -119,6 +119,23 @@ namespace :jobs do
     schema_dot_org_data.import(data, "LocalJobNetwork") 
   end
 
+  desc 'Download and import known JSON schema.org feeds'
+  task download_and_import_known_json_schema_dot_org_feeds: :environment do
+    KNOWN_JSON_SCHEMA_DOT_ORG_FEEDS = 
+      [  ## Add/remove feeds as appropriate
+        {"source" => "jb_hunt", "url" => "https://www.jbhunt.com/jobs/driving_jobs_json_feed"}
+      ]
+    KNOWN_JSON_SCHEMA_DOT_ORG_FEEDS.each do |feed|
+      begin
+       employer_response = HTTParty.get(feed["url"], timeout: 5)
+       importer = SchemaDotOrgJsonData.new(employer_response.body, feed["source"])
+       importer.import
+      rescue => e
+            Rails.logger.info "Rescued #{e.inspect} -- #{feed['url']}"
+      end
+    end
+  end
+
   desc 'Recreate position openings index'
   task recreate_index: :environment do
     PositionOpening.delete_search_index if PositionOpening.search_index.exists?

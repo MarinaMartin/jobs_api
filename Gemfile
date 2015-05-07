@@ -23,6 +23,9 @@ gem 'mida'
 
 group :development do
   gem 'capistrano'
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'byebug'
 end
 
 group :test do
