@@ -9,7 +9,7 @@ class SchemaDotOrgJsonData
   def import
     parsed_json = JSON.parse(@json)
     position_openings = parsed_json.collect do |job|
-      process_job(job)
+      process_job(job) if has_minimum_required_props(job)
     end.compact
     PositionOpening.import position_openings
   end
@@ -22,7 +22,7 @@ class SchemaDotOrgJsonData
     inactive = false
     days_remaining = 0 if days_remaining < 0 || start_date > end_date || inactive
     entry = {type: 'position_opening', source: @source, tags: %w(private)}
-    entry[:external_id] = rand().to_s 
+    entry[:external_id] = job['url']
     entry[:locations] = process_locations(job)
     if entry[:locations]
       entry[:locations] = [] if entry[:locations].size >= CATCHALL_THRESHOLD
@@ -65,6 +65,11 @@ class SchemaDotOrgJsonData
       return hiring_organization_name
     end
     return nil
+  end
+
+  def has_minimum_required_props(job_posting)
+    required_properties = ['hiringOrganization','datePosted', 'url']
+    required_properties.map {|x| !job_posting[x].blank?}.all?
   end
 
 end
