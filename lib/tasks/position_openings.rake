@@ -68,7 +68,7 @@ namespace :jobs do
       puts "Example YAML file syntax:"
       puts "bloomingtonmn:"
       puts "\ttags: city tag_2"
-      puts "\torganization_id: US-MN:CITY-BLOOMINGTON"
+e     puts "\torganization_id: US-MN:CITY-BLOOMINGTON"
       puts "\torganization_name: City of Bloomington"
       puts "ohio:"
       puts "\ttags: state tag_3"
@@ -117,6 +117,23 @@ namespace :jobs do
 
     schema_dot_org_data = SchemaDotOrgData.new
     schema_dot_org_data.import(data, "LocalJobNetwork") 
+  end
+
+  desc 'Download and import known JSON schema.org feeds'
+  task download_and_import_known_json_schema_dot_org_feeds: :environment do
+    known_json_schema_dot_org_feeds = 
+      [  ## Add feeds as appropriate
+        {"source" => "jb_hunt", "url" => "https://www.jbhunt.com/jobs/driving_jobs_json_feed"}
+      ]
+    known_json_schema_dot_org_feeds.each do |feed|
+      begin
+       employer_response = HTTParty.get(feed["url"], timeout: 5)
+       importer = SchemaDotOrgJsonData.new(employer_response.body, feed["source"])
+       importer.import
+      rescue => e
+            Rails.logger.info "Rescued #{e.inspect} -- #{feed['url']}"
+      end
+    end
   end
 
   desc 'Recreate position openings index'
