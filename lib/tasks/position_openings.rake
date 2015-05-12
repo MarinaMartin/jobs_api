@@ -121,11 +121,11 @@ e     puts "\torganization_id: US-MN:CITY-BLOOMINGTON"
 
   desc 'Download and import known JSON schema.org feeds'
   task download_and_import_known_json_schema_dot_org_feeds: :environment do
-    known_json_schema_dot_org_feeds = 
-      [  ## Add feeds as appropriate
+    KNOWN_JSON_SCHEMA_DOT_ORG_FEEDS = 
+      [  ## Add/remove feeds as appropriate
         {"source" => "jb_hunt", "url" => "https://www.jbhunt.com/jobs/driving_jobs_json_feed"}
       ]
-    known_json_schema_dot_org_feeds.each do |feed|
+    KNOWN_JSON_SCHEMA_DOT_ORG_FEEDS.each do |feed|
       begin
        employer_response = HTTParty.get(feed["url"], timeout: 5)
        importer = SchemaDotOrgJsonData.new(employer_response.body, feed["source"])
