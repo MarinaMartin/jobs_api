@@ -17,14 +17,14 @@ class SchemaDotOrgData
   
   def process_job_posting(job_posting, source)
     if job_posting.properties 
-      published_at = DateTime.parse(job_posting.properties["datePosted"]) if job_posting.properties["datePosted"]
+      published_at = DateTime.parse(job_posting.properties["datePosted"].to_s) if job_posting.properties["datePosted"]
       start_date = published_at ? published_at.to_date : Date.current
       end_date = start_date + 30.days
       days_remaining = (end_date - Date.current).to_i
       inactive = false
       days_remaining = 0 if days_remaining < 0 || start_date > end_date || inactive
       entry = {type: 'position_opening', source: source, tags: ["federal", source.downcase.gsub(/ /, "_")]}
-      entry[:external_id] = job_posting.properties['url']
+      entry[:external_id] = job_posting.properties['url'].first
       entry[:locations] = process_locations(job_posting)
       if entry[:locations]
         entry[:locations] = [] if entry[:locations].size >= CATCHALL_THRESHOLD
@@ -35,7 +35,8 @@ class SchemaDotOrgData
           entry[:organization_name] = process_organization_name(job_posting) || source
           entry[:start_date] = start_date
           entry[:end_date] = end_date
-          entry[:minimum] = job_posting.properties['baseSalary'] if job_posting.properties['baseSalary']
+          entry[:date_posted] = job_posting.properties["datePosted"].first
+          entry[:url] = job_posting.properties["url"].first
         end
       end 
       entry

@@ -33,6 +33,7 @@ class SchemaDotOrgJsonData
         entry[:organization_name] = process_organization_name(job)|| @source 
         entry[:start_date] = start_date
         entry[:end_date] = end_date
+        entry[:date_posted] = job['datePosted']
         entry[:url] = job['url'] 
       end
       entry
