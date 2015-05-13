@@ -5,8 +5,6 @@ describe SchemaDotOrgData do
   
   describe "import" do
     before do
-      @html = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/test.html")
-      @html.gsub!(/DATE-PLACEHOLDER/, Date.current.to_s)
       @position_openings = [
         {type: 'position_opening',
          source: 'Schema Test',
@@ -25,14 +23,16 @@ describe SchemaDotOrgData do
       ]
     end
     
-    it "should load positions from an HTML string containing microdata" do
+    it "should load positions from an HTML string containing microdata including all required properties" do
+      @html = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/schema_dot_org_html_with_all_required_elements.html")
+      @html.gsub!(/DATE-PLACEHOLDER/, Date.current.to_s)
       PositionOpening.should_receive(:import).with(@position_openings)
       schema_dot_org_data = SchemaDotOrgData.new
       schema_dot_org_data.import(@html, 'Schema Test')
     end
 
-    it "should not load positions from an HTML string missing required properties" do
-      @html.gsub!(/<span itemprop=\"datePosted\">.*<\/span>/, "")
+    it "should not load positions from an HTML string missing at least one required property" do
+      @html = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/schema_dot_org_html_missing_required_elements.html")
       PositionOpening.should_receive(:import).with([])
       schema_dot_org_data = SchemaDotOrgData.new
       schema_dot_org_data.import(@html, 'Schema Test')

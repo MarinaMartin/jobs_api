@@ -5,10 +5,6 @@ describe SchemaDotOrgJsonData do
   
   describe "import" do
     before do
-      @dateless_json = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/test.json")
-      @parsed_json = JSON.parse(@dateless_json)
-      @parsed_json.first["datePosted"] = Date.current
-      @json = @parsed_json.to_json
       @position_openings = 
         [
           {
@@ -31,14 +27,17 @@ describe SchemaDotOrgJsonData do
     end
     
     it "should load positions from a JSON string" do
+      @json = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/schema_dot_org_json_with_all_required_elements.json")
+      @parsed_json = JSON.parse(@json)
+      @parsed_json.first["datePosted"] = Date.current
+      @json = @parsed_json.to_json
       PositionOpening.should_receive(:import).with(@position_openings)
       importer = SchemaDotOrgJsonData.new(@json, 'Schema JSON Test')
       importer.import
     end
 
     it "should not load positions from a JSON string missing required properties" do
-      @parsed_json.first.delete("datePosted")
-      @json = @parsed_json.to_json
+      @json = File.read(Rails.root.to_s + "/spec/resources/schema_dot_org/schema_dot_org_json_missing_required_elements.json")
       PositionOpening.should_receive(:import).with([])
       importer = SchemaDotOrgJsonData.new(@json, 'Schema JSON Test')
       importer.import
