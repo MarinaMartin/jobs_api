@@ -75,7 +75,6 @@ class SchemaDotOrgData
 
   def has_minimum_required_props(job_posting)
     if job_posting.properties
-      required_properties = ['hiringOrganization','datePosted', 'url']
       required_properties.map {|prop| !job_posting.properties[prop].blank?}.all?
     else 
       return false 

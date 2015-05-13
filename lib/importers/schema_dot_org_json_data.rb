@@ -69,8 +69,7 @@ class SchemaDotOrgJsonData
   end
 
   def has_minimum_required_props(job_posting)
-    required_properties = ['hiringOrganization','datePosted', 'url']
-    required_properties.map {|x| !job_posting[x].blank?}.all?
+    required_properties.map {|prop| !job_posting[prop].blank?}.all?
   end
 
 end
