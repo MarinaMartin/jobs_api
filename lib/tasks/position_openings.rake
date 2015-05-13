@@ -68,7 +68,7 @@ namespace :jobs do
       puts "Example YAML file syntax:"
       puts "bloomingtonmn:"
       puts "\ttags: city tag_2"
-e     puts "\torganization_id: US-MN:CITY-BLOOMINGTON"
+      puts "\torganization_id: US-MN:CITY-BLOOMINGTON"
       puts "\torganization_name: City of Bloomington"
       puts "ohio:"
       puts "\ttags: state tag_3"
