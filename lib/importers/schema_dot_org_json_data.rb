@@ -43,9 +43,9 @@ class SchemaDotOrgJsonData
   def process_locations(job)
     job_location = job['jobLocation']
     if job_location
-       city = job_location['address']['addressLocality'] unless ! job_location['address']
-       state = job_location['address']['addressRegion'] unless ! job_location['address']
-        [{city: city, state: state}]
+      city = job_location['address']['addressLocality'].strip.capitalize unless ! job_location['address']
+      state = job_location['address']['addressRegion'].strip unless ! job_location['address']
+      [{city: city, state: state}]
     end
   end
 
