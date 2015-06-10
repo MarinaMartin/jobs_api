@@ -190,6 +190,11 @@ describe PositionOpening do
         res = PositionOpening.search_for(query: 'jobs', organization_id: 'VA')
         res.first[:position_title].should == 'Physician Assistant'
       end
+
+      it 'should find based on organization name' do
+        res = PositionOpening.search_for(query: 'jobs', organization_name: 'affair')
+        res.first[:position_title].should == 'Physician Assistant'
+      end
     end
 
     describe 'tags search' do

@@ -16,7 +16,10 @@ class PositionOpening
           settings: {
             index: {
               analysis: {
-                analyzer: {custom_analyzer: {type: 'custom', tokenizer: 'whitespace', filter: %w(standard lowercase synonym snowball)}},
+                analyzer: {
+                  custom_analyzer: {type: 'custom', tokenizer: 'whitespace', filter: %w(standard lowercase synonym snowball)},
+                  orgname_analyzer: {type: 'custom', tokenizer: 'standard', filter: %w(standard lowercase synonym snowball)}
+                },
                 filter: {synonym: {type: 'synonym', synonyms: SYNONYMS}}
               }
             }
@@ -33,7 +36,7 @@ class PositionOpening
                 url: {type: 'string', index: :not_analyzed},
                 position_title: {type: 'string', analyzer: 'custom_analyzer', term_vector: 'with_positions_offsets', store: true},
                 organization_id: {type: 'string', analyzer: 'keyword'},
-                organization_name: {type: 'string', index: :not_analyzed},
+                organization_name: {type: 'string', analyzer: 'orgname_analyzer'},
                 locations: {
                   type: 'nested',
                   properties: {
@@ -61,7 +64,7 @@ class PositionOpening
       source = options[:source]
       tags = options[:tags].present? ? options[:tags].split : nil
       lat, lon = options[:lat_lon].split(',') rescue [nil, nil]
-      query = Query.new(options[:query], options[:organization_id])
+      query = Query.new(options[:query], options[:organization_id], options[:organization_name])
 
       search = Tire.search index_name do
         query do
@@ -80,6 +83,7 @@ class PositionOpening
             end if query.keywords.present? && query.location.nil?
             must { match :rate_interval_code, query.rate_interval_code } if query.rate_interval_code.present?
             must { send(query.organization_format, :organization_id, query.organization_id) } if query.organization_id.present?
+            must {match :organization_name, query.organization_name, analyzer: 'custom_analyzer'} if query.organization_name.present?
             must do
               nested path: 'locations' do
                 query do

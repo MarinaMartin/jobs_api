@@ -43,6 +43,15 @@ describe 'Position Openings API V2' do
         end
       end
 
+      context 'when searching by organization name' do
+        before { get '/search.json', { query: '', organization_name: 'force' } }
+        it 'should return with jobs data' do
+          results_array = JSON.parse(response.body)
+          results_array.size.should == 1
+          results_array.first.should include({'id' => 'usajobs:305972200'})
+        end
+      end
+
       context 'when searching for non-existing jobs' do
         before { get '/search.json', { query: 'astronaut jobs', hl: 1 } }
 

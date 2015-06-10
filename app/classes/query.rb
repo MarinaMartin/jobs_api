@@ -4,12 +4,13 @@ class Query
   NON_CAPTURING_JOB_KEYWORD_TOKENS = JOB_KEYWORD_TOKENS.sub('(','(?:')
   STOPWORDS = 'appl(y|ications?)|for|the|a|and|available|gov(ernment)?|usa|current|civilian|fed(eral)?|(usajob|opening|posting|description|announcement|listing)s?|(opportunit|vacanc)(y|ies)|search(es)?|(posicion|ocupacion|oportunidad|federal)es|gobierno'.freeze
 
-  attr_accessor :location, :organization_id, :keywords, :position_offering_type_code, :position_schedule_type_code, :rate_interval_code
+  attr_accessor :location, :organization_id, :organization_name, :keywords, :position_offering_type_code, :position_schedule_type_code, :rate_interval_code
 
-  def initialize(query, organization_id)
+  def initialize(query, organization_id, organization_name=nil)
     organization_id.upcase! if organization_id.present?
     self.keywords = parse(normalize(query)) if query.present?
     self.organization_id ||= organization_id
+    self.organization_name = organization_name
   end
 
   def has_state?
@@ -21,8 +22,8 @@ class Query
   end
 
   def valid?
-    keywords.present? || location.present? || organization_id.present? ||
-      position_offering_type_code.present? || position_schedule_type_code.present? || rate_interval_code.present?
+    keywords.present? || location.present? || organization_id.present? || organization_name.present? || 
+    position_offering_type_code.present? || position_schedule_type_code.present? || rate_interval_code.present?
   end
 
   def organization_format
