@@ -1,8 +1,10 @@
 class PositionOpening
   include Tire::Model::Search
 
-  index_name("#{Elasticsearch::INDEX_NAME}")
 
+  index_name("#{Elasticsearch::WRITE_INDEX_NAME}")
+
+  READ_INDEX = Elasticsearch::INDEX_NAME
   MAX_RETURNED_DOCUMENTS = 100
   SYNONYMS = ["information technology, it, tech, computer", "teacher, teaching", "certified nursing assistant, cna", "rn, registered nurse", "lpn, licensed practical nurse", "lvn, licensed vocational nurse", "pa, physician assistant", "custodial, janitor, custodian", "cys, child youth services", "clerk, clerical", "physician, doctor", "linguist, language", "tv, television", "legal, attorney", "counselor, counseling, therapy, therapist", "green, environment, environmental", "forester, forestry", "technical, technician", "technology, technologist", "electronic, electrical", "architect, architecture", "cypa, child and youth program assistant, childcare", "tso, transportation security officer"].freeze
 
@@ -66,7 +68,7 @@ class PositionOpening
       lat, lon = options[:lat_lon].split(',') rescue [nil, nil]
       query = Query.new(options[:query], options[:organization_id], options[:organization_name])
 
-      search = Tire.search index_name do
+      search = Tire.search READ_INDEX do
         query do
           boolean(minimum_number_should_match: 1) do
             must { term :source, source } if source.present?
@@ -148,18 +150,20 @@ class PositionOpening
     end
 
     def import(position_openings)
-      Tire.index index_name do
-        import position_openings do |docs|
-          docs.each do |doc|
-            doc[:id] = "#{doc[:source]}:#{doc[:external_id]}"
-            doc[:locations].each do |loc|
-              normalized_city = loc[:city].sub(' Metro Area', '').sub(/, .*$/, '')
-              lat_lon_hash = Geoname.geocode(location: normalized_city, state: loc[:state])
-              loc[:geo] = lat_lon_hash if lat_lon_hash.present?
-            end if doc[:locations].present?
+      [READ_INDEX, index_name].uniq.each do |curindexname|
+        Tire.index curindexname do
+          import position_openings do |docs|
+            docs.each do |doc|
+              doc[:id] = "#{doc[:source]}:#{doc[:external_id]}"
+              doc[:locations].each do |loc|
+                normalized_city = loc[:city].sub(' Metro Area', '').sub(/, .*$/, '')
+                lat_lon_hash = Geoname.geocode(location: normalized_city, state: loc[:state])
+                loc[:geo] = lat_lon_hash if lat_lon_hash.present?
+              end if doc[:locations].present?
+            end
           end
+          refresh
         end
-        refresh
       end
 
       Rails.logger.info "Imported #{position_openings.size} position openings"

@@ -392,7 +392,7 @@ describe PositionOpening do
       Geoname.should_receive(:geocode).with(location: 'Washington', state: 'DC').and_return({lat: 23.45, lon: -12.34})
       Geoname.should_receive(:geocode).with(location: 'Maui Island', state: 'HI').and_return({lat: 45.67, lon: -13.31})
       PositionOpening.import([position_opening])
-      position_openings = Tire.search 'test:jobs' do
+      position_openings = Tire.search 'test:jobs:head' do
         query { all }
       end
       position_openings.results.first[:locations][0][:geo].to_hash.should == {lat: 12.34, lon: -23.45}
@@ -410,7 +410,7 @@ describe PositionOpening do
 
       it 'should leave locations empty' do
         PositionOpening.import([position_opening_no_locations])
-        position_openings = Tire.search 'test:jobs' do
+        position_openings = Tire.search 'test:jobs:head' do
           query { all }
         end
         position_openings.results.first[:locations].should be_nil
