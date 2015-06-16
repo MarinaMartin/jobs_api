@@ -415,7 +415,37 @@ describe PositionOpening do
         end
         position_openings.results.first[:locations].should be_nil
       end
+      
+    end
 
+    context 'multiple index' do
+      before do
+        @old_index = PositionOpening.index_name
+        @new_index = PositionOpening.index_name('test:jobs:dupe')
+        PositionOpening.import([position_opening])
+      end
+
+      it 'should index to both' do
+        position_openings = Tire.search 'test:jobs:head' do
+          query { all }
+        end
+        expect(position_openings.results.size).to eq(1)
+
+        position_openings = Tire.search 'test:jobs:dupe' do
+          query { all }
+        end
+        expect(position_openings.results.size).to eq(1)
+      end
+
+      it 'should route searches to the read index' do
+        PositionOpening.delete_search_index
+        expect(PositionOpening.search_for.size).to eq(1)
+      end
+      
+      after do
+        PositionOpening.delete_search_index
+        PositionOpening.index_name(@old_index)
+      end
     end
   end
 
