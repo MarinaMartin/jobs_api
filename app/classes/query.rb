@@ -62,11 +62,6 @@ class Query
       self.location = Location.new(location_str)
       query.gsub!(location_str, '')
     end
-    if self.organization_id.nil? && (possible_org = extract_possible_org(query))
-      if (self.organization_id = Agencies.find_organization_id(possible_org))
-        query.gsub!(possible_org, '')
-      end
-    end
     query.gsub(/\b#{JOB_KEYWORD_TOKENS}\b/, '').squish
   end
 
